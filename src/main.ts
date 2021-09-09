@@ -16,7 +16,6 @@ async function bootstrap() {
     .setTitle('My Top Movies')
     .setDescription('Rate your top movies')
     .setVersion('1.0')
-    .addTag('Movies')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -13,8 +13,12 @@ export class MoviesService {
     private moviesRepository: Repository<Movie>
   ) {}
 
-  create(createMovieDto: CreateMovieDto) {
-    return 'This action adds a new movie';
+  create(createMovieDto: CreateMovieDto): Movie {
+    const createdMovie = this.moviesRepository.create(createMovieDto);
+
+    this.moviesRepository.save(createdMovie);
+
+    return createdMovie;
   }
 
   findAll() {
