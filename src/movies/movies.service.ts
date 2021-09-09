@@ -13,8 +13,8 @@ export class MoviesService {
     private moviesRepository: Repository<Movie>
   ) {}
 
-  create(createMovieDto: CreateMovieDto): Movie {
-    const createdMovie = this.moviesRepository.create(createMovieDto);
+  async create(createMovieDto: CreateMovieDto): Promise<Movie> {
+    const createdMovie = await this.moviesRepository.create(createMovieDto);
 
     this.moviesRepository.save(createdMovie);
 
