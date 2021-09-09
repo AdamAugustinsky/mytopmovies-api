@@ -1,0 +1,9 @@
+services:
+  mysql:
+    image: postgres:alpine
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: postgres
+      MYSQL_DATABASE: mytopmovies
+    ports:
+      - "5432:5432"
