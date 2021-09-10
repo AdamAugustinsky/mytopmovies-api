@@ -36,17 +36,9 @@ describe('MoviesController', () => {
           provide: getRepositoryToken(Movie),
           useValue: {
             create: jest.fn((createMovieDto: CreateMovieDto) => {
-              const movie: Movie = new Movie();
-
-              movie.id = 1;
-              movie.title = createMovieDto.title;
-              movie.description = createMovieDto.description;
-              movie.director = createMovieDto.director;
-              movie.rating = createMovieDto.rating;
-              movie.releaseDate = createMovieDto.releaseDate;
-              movie.imageUrl = createMovieDto.imageUrl;
-
-              return Promise.resolve(movie);
+              const newMovie: Movie = new Movie();
+              Object.assign(newMovie, {id: 1, ...createMovieDto});
+              return Promise.resolve(newMovie);
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
             find: jest.fn(() => Promise.resolve([movie])),
@@ -84,7 +76,7 @@ describe('MoviesController', () => {
     });
   });
 
-  describe("findMovies", () => {
+  describe("findAllMovies", () => {
     it('should be able to list all movies', async () => {
       const movies = await controller.findAll();
 
