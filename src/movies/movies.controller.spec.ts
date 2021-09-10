@@ -37,7 +37,7 @@ describe('MoviesController', () => {
           useValue: {
             create: jest.fn((createMovieDto: CreateMovieDto) => {
               const newMovie: Movie = new Movie();
-              Object.assign(newMovie, {id: 1, ...createMovieDto});
+              Object.assign(newMovie, { id: 1, ...createMovieDto });
               return Promise.resolve(newMovie);
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
@@ -90,7 +90,8 @@ describe('MoviesController', () => {
 
       expect(requestedMovie).toEqual(movie);
     });
- 
+  });
+
   describe("updateMovie", () => {
     it('should be able to update a movie', async () => {
       const updateMovieDto = {
@@ -107,5 +108,5 @@ describe('MoviesController', () => {
         ...updateMovieDto
       });
     });
-  }); });
+  });
 });
