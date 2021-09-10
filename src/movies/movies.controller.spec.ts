@@ -86,4 +86,12 @@ describe('MoviesController', () => {
       expect(movies).toEqual([movie]);
     });
   });
+
+  describe("findOneMovie", () => {
+    it('should be able to list all movies', async () => {
+      const requestedMovie = await controller.findOne(3);
+
+      expect(requestedMovie).toEqual(movie);
+    });
+  });
 });
