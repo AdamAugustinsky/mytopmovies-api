@@ -26,8 +26,8 @@ export class MoviesService {
     return movies;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  async findOne(id: number): Promise<Movie> {
+    return await this.moviesRepository.findOne(id);
   }
 
   update(id: number, updateMovieDto: UpdateMovieDto) {
