@@ -17,6 +17,15 @@ mockMovie.rating = 5;
 describe('MoviesController', () => {
   let controller: MoviesController;
 
+  const movie: Movie = new Movie();
+  movie.id = 1;
+  movie.title = "test title";
+  movie.description = "test description";
+  movie.director = "test director";
+  movie.rating = 3;
+  movie.releaseDate = new Date();
+  movie.imageUrl = "test image url";
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MoviesController],
@@ -39,6 +48,7 @@ describe('MoviesController', () => {
               return Promise.resolve(movie);
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
+            find: jest.fn(() => Promise.resolve([movie])),
           }
         }
       ],
@@ -67,5 +77,13 @@ describe('MoviesController', () => {
         ...createMovieDto
       });
     });
-  })
+  });
+
+  describe("findMovies", () => {
+    it('should be able to list all movies', async () => {
+      const movies = await controller.findAll();
+
+      expect(movies).toEqual([movie]);
+    });
+  });
 });

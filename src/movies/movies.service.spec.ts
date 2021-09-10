@@ -7,6 +7,15 @@ import { MoviesService } from './movies.service';
 describe('MoviesService', () => {
   let service: MoviesService;
 
+  const movie: Movie = new Movie();
+  movie.id = 1;
+  movie.title = "test title";
+  movie.description = "test description";
+  movie.director = "test director";
+  movie.rating = 3;
+  movie.releaseDate = new Date();
+  movie.imageUrl = "test image url";
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -15,19 +24,20 @@ describe('MoviesService', () => {
           provide: getRepositoryToken(Movie),
           useValue: {
             create: jest.fn((createMovieDto: CreateMovieDto) => {
-              const movie: Movie = new Movie();
+              const newMovie: Movie = new Movie();
 
-              movie.id = 1;
-              movie.title = createMovieDto.title;
-              movie.description = createMovieDto.description;
-              movie.director = createMovieDto.director;
-              movie.rating = createMovieDto.rating;
-              movie.releaseDate = createMovieDto.releaseDate;
-              movie.imageUrl = createMovieDto.imageUrl;
+              newMovie.id = 1;
+              newMovie.title = createMovieDto.title;
+              newMovie.description = createMovieDto.description;
+              newMovie.director = createMovieDto.director;
+              newMovie.rating = createMovieDto.rating;
+              newMovie.releaseDate = createMovieDto.releaseDate;
+              newMovie.imageUrl = createMovieDto.imageUrl;
 
-              return Promise.resolve(movie);
+              return Promise.resolve(newMovie);
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
+            find: jest.fn(() => Promise.resolve([movie])),
           }
         }
       ],
@@ -56,5 +66,13 @@ describe('MoviesService', () => {
         ...createMovieDto
       });
     });
-  })
+  });
+
+  describe("findMovies", () => {
+    it('should be able to list all movies', async () => {
+      const movies = await service.findAll();
+
+      expect(movies).toEqual([movie]);
+    });
+  });
 });

@@ -21,8 +21,9 @@ export class MoviesService {
     return createdMovie;
   }
 
-  findAll() {
-    return `This action returns all movies`;
+  async findAll(): Promise<Movie[]> {
+    const movies: Movie[] = await this.moviesRepository.find();
+    return movies;
   }
 
   findOne(id: number) {
