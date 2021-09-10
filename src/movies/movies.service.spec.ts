@@ -71,14 +71,14 @@ describe('MoviesService', () => {
     });
   });
   describe("findOneMovie", () => {
-    it('should be able to list all movies', async () => {
+    it('should be able to list one movie', async () => {
       const requestedMovie = await service.findOne(3);
 
       expect(requestedMovie).toEqual(movie);
     });
  
   describe("updateMovie", () => {
-    it('should be able to create a movie', async () => {
+    it('should be able to update a movie', async () => {
       const updateMovieDto = {
         title: "updated test title",
         description: "test description",
