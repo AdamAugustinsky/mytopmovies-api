@@ -30,8 +30,14 @@ export class MoviesService {
     return await this.moviesRepository.findOne(id);
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async update(id: number, updateMovieDto: UpdateMovieDto): Promise<Movie> {
+    const movie = await this.moviesRepository.findOne(id);
+    
+    Object.assign(movie, updateMovieDto);
+
+    const updatedMovie = await this.moviesRepository.save(movie);
+
+    return updatedMovie;
   }
 
   remove(id: number) {
