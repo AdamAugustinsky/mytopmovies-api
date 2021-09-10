@@ -38,6 +38,7 @@ describe('MoviesService', () => {
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
             find: jest.fn(() => Promise.resolve([movie])),
+            findOne: jest.fn((id: number) => Promise.resolve(movie)),
           }
         }
       ],
@@ -73,6 +74,14 @@ describe('MoviesService', () => {
       const movies = await service.findAll();
 
       expect(movies).toEqual([movie]);
+    });
+  });
+
+  describe("findOneMovie", () => {
+    it('should be able to list all movies', async () => {
+      const requestedMovie = await service.findOne(3);
+
+      expect(requestedMovie).toEqual(movie);
     });
   });
 });
