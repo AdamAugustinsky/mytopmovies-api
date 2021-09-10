@@ -25,15 +25,7 @@ describe('MoviesService', () => {
           useValue: {
             create: jest.fn((createMovieDto: CreateMovieDto) => {
               const newMovie: Movie = new Movie();
-
-              newMovie.id = 1;
-              newMovie.title = createMovieDto.title;
-              newMovie.description = createMovieDto.description;
-              newMovie.director = createMovieDto.director;
-              newMovie.rating = createMovieDto.rating;
-              newMovie.releaseDate = createMovieDto.releaseDate;
-              newMovie.imageUrl = createMovieDto.imageUrl;
-
+              Object.assign(newMovie, {id: 1, ...createMovieDto});
               return Promise.resolve(newMovie);
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
@@ -71,8 +63,7 @@ describe('MoviesService', () => {
       });
     });
   });
-
-  describe("findMovies", () => {
+  describe("findAllMovies", () => {
     it('should be able to list all movies', async () => {
       const movies = await service.findAll();
 
