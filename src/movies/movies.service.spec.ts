@@ -34,6 +34,7 @@ describe('MoviesService', () => {
               movie.id = id;
               return movie;
             }),
+            delete: jest.fn(() => Promise.resolve(true)),
           }
         }
       ],
@@ -96,6 +97,12 @@ describe('MoviesService', () => {
         id: 99,
         ...updateMovieDto
       });
+    });
+  });
+
+  describe("removeMovie", () => {
+    it('should be able to delete movie', async () => {
+      await expect(service.remove(1)).toBeTruthy();
     });
   });
 });
