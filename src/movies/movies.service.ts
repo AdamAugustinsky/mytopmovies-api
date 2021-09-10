@@ -11,7 +11,7 @@ export class MoviesService {
   constructor(
     @InjectRepository(Movie)
     private moviesRepository: Repository<Movie>
-  ) {}
+  ) { }
 
   async create(createMovieDto: CreateMovieDto): Promise<Movie> {
     const createdMovie = await this.moviesRepository.create(createMovieDto);
@@ -40,7 +40,7 @@ export class MoviesService {
     return updatedMovie;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async remove(id: number): Promise<void> {
+    await this.moviesRepository.delete(id);
   }
 }
