@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { request } from 'http';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MoviesController } from './movies.controller';
@@ -49,6 +50,10 @@ describe('MoviesController', () => {
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
             find: jest.fn(() => Promise.resolve([movie])),
+            findOne: jest.fn((id: number) => {
+              movie.id = id;
+              return movie;
+            }),
           }
         }
       ],
