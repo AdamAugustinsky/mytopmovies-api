@@ -70,12 +70,28 @@ describe('MoviesService', () => {
       expect(movies).toEqual([movie]);
     });
   });
-
   describe("findOneMovie", () => {
     it('should be able to list all movies', async () => {
       const requestedMovie = await service.findOne(3);
 
       expect(requestedMovie).toEqual(movie);
     });
-  });
+ 
+  describe("updateMovie", () => {
+    it('should be able to create a movie', async () => {
+      const updateMovieDto = {
+        title: "updated test title",
+        description: "test description",
+        director: "test director",
+        releaseDate: new Date('2001-01-01'),
+        rating: 1,
+        imageUrl: "test image url",
+      };
+
+      await expect(service.update(99, updateMovieDto)).resolves.toEqual({
+        id: 99,
+        ...updateMovieDto
+      });
+    });
+  }); });
 });
