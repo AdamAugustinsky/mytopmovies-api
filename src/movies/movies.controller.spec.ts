@@ -90,5 +90,22 @@ describe('MoviesController', () => {
 
       expect(requestedMovie).toEqual(movie);
     });
-  });
+ 
+  describe("updateMovie", () => {
+    it('should be able to create a movie', async () => {
+      const updateMovieDto = {
+        title: "updated test title",
+        description: "test description",
+        director: "test director",
+        releaseDate: new Date('2001-01-01'),
+        rating: 1,
+        imageUrl: "test image url",
+      };
+
+      await expect(controller.update(99, updateMovieDto)).resolves.toEqual({
+        id: 99,
+        ...updateMovieDto
+      });
+    });
+  }); });
 });
