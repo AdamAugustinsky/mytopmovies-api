@@ -38,7 +38,10 @@ describe('MoviesService', () => {
             }),
             save: jest.fn((movie: Movie) => Promise.resolve(movie)),
             find: jest.fn(() => Promise.resolve([movie])),
-            findOne: jest.fn((id: number) => Promise.resolve(movie)),
+            findOne: jest.fn((id: number) => {
+              movie.id = id;
+              return movie;
+            }),
           }
         }
       ],
