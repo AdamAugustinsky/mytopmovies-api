@@ -46,6 +46,7 @@ describe('MoviesController', () => {
               movie.id = id;
               return movie;
             }),
+            delete: jest.fn(() => Promise.resolve(true)),
           }
         }
       ],
@@ -107,6 +108,12 @@ describe('MoviesController', () => {
         id: 99,
         ...updateMovieDto
       });
+    });
+  });
+
+  describe("removeMovie", () => {
+    it('should be able to delete movie', async () => {
+      await expect(controller.remove(1)).toBeTruthy();
     });
   });
 });
