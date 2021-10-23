@@ -7,11 +7,10 @@ import { Movie } from './entities/movie.entity';
 
 @Injectable()
 export class MoviesService {
-
   constructor(
     @InjectRepository(Movie)
-    private moviesRepository: Repository<Movie>
-  ) { }
+    private moviesRepository: Repository<Movie>,
+  ) {}
 
   async create(createMovieDto: CreateMovieDto): Promise<Movie> {
     const createdMovie = await this.moviesRepository.create(createMovieDto);
@@ -32,7 +31,7 @@ export class MoviesService {
 
   async update(id: number, updateMovieDto: UpdateMovieDto): Promise<Movie> {
     const movie = await this.moviesRepository.findOne(id);
-    
+
     Object.assign(movie, updateMovieDto);
 
     const updatedMovie = await this.moviesRepository.save(movie);

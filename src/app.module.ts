@@ -4,10 +4,6 @@ import { MoviesModule } from './movies/movies.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(),
-    MoviesModule,
-    UsersModule
-  ],
+  imports: [TypeOrmModule.forRoot(), MoviesModule, UsersModule],
 })
 export class AppModule {}

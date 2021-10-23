@@ -1,25 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Movie {
   @PrimaryGeneratedColumn()
   id: number;
-  
+
   @Column()
   title: string;
-  
+
   @Column()
   description: string;
-  
+
   @Column()
   director: string;
-  
+
   @Column()
   releaseDate: Date;
-  
+
   @Column()
   rating: number;
-  
+
   @Column()
   imageUrl: string;
 }
