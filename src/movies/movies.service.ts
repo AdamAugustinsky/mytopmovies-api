@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -26,11 +26,25 @@ export class MoviesService {
   }
 
   async findOne(id: number): Promise<Movie> {
-    return await this.moviesRepository.findOne(id);
+    const movie = await this.moviesRepository.findOne(id);
+
+    if (!movie)
+      throw new HttpException(
+        `Movie with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    return movie;
   }
 
   async update(id: number, updateMovieDto: UpdateMovieDto): Promise<Movie> {
     const movie = await this.moviesRepository.findOne(id);
+
+    if (!movie)
+      throw new HttpException(
+        `Movie with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
 
     Object.assign(movie, updateMovieDto);
 
@@ -40,6 +54,14 @@ export class MoviesService {
   }
 
   async remove(id: number): Promise<void> {
+    const movie = await this.moviesRepository.findOne(id);
+
+    if (!movie)
+      throw new HttpException(
+        `Movie with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+
     await this.moviesRepository.delete(id);
   }
 }
