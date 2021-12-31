@@ -6,22 +6,28 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @Column({ unique: true })
+  @ApiProperty()
   email: string;
 
   @Column()
+  @ApiProperty()
   username: string;
 
   @Column()
+  @ApiProperty()
   password: string;
 
   @ManyToMany(() => Movie)
   @JoinTable()
+  @ApiProperty({ type: Movie, isArray: true })
   movies: Movie[];
 }

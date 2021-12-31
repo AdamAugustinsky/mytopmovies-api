@@ -10,6 +10,6 @@ export class CreateUserDto {
   @ApiProperty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, isArray: true })
   movies_ids: number[];
 }
