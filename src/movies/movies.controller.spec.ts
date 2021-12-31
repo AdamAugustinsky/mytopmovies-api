@@ -1,18 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CreateMovieDto } from './dto/create-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MoviesController } from './movies.controller';
 import { MoviesService } from './movies.service';
-
-const mockMovie: Movie = new Movie();
-mockMovie.id = 0;
-mockMovie.title = 'test title';
-mockMovie.description = 'test description';
-mockMovie.director = 'test director';
-mockMovie.imageUrl = 'http://en.wikipedia.org/wiki/File:Ada_lovelace.jpg';
-mockMovie.releaseDate = new Date('2001-01-01');
-mockMovie.rating = 5;
+import { MovieInMemoryRepository } from './repositories/movie.repository.in-memory';
 
 describe('MoviesController', () => {
   let controller: MoviesController;
@@ -27,26 +18,15 @@ describe('MoviesController', () => {
   movie.imageUrl = 'test image url';
 
   beforeEach(async () => {
+    const movieInMemoryRepository = new MovieInMemoryRepository();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MoviesController],
       providers: [
         MoviesService,
         {
           provide: getRepositoryToken(Movie),
-          useValue: {
-            create: jest.fn((createMovieDto: CreateMovieDto) => {
-              const newMovie: Movie = new Movie();
-              Object.assign(newMovie, { id: 1, ...createMovieDto });
-              return Promise.resolve(newMovie);
-            }),
-            save: jest.fn((movie: Movie) => Promise.resolve(movie)),
-            find: jest.fn(() => Promise.resolve([movie])),
-            findOne: jest.fn((id: number) => {
-              movie.id = id;
-              return movie;
-            }),
-            delete: jest.fn(() => Promise.resolve(true)),
-          },
+          useValue: movieInMemoryRepository,
         },
       ],
     }).compile();
@@ -78,6 +58,7 @@ describe('MoviesController', () => {
 
   describe('findAllMovies', () => {
     it('should be able to list all movies', async () => {
+      await controller.create(movie);
       const movies = await controller.findAll();
 
       expect(movies).toEqual([movie]);
@@ -86,7 +67,8 @@ describe('MoviesController', () => {
 
   describe('findOneMovie', () => {
     it('should be able to list one movie', async () => {
-      const requestedMovie = await controller.findOne(3);
+      await controller.create(movie);
+      const requestedMovie = await controller.findOne(1);
 
       expect(requestedMovie).toEqual(movie);
     });
@@ -103,8 +85,10 @@ describe('MoviesController', () => {
         imageUrl: 'test image url',
       };
 
-      await expect(controller.update(99, updateMovieDto)).resolves.toEqual({
-        id: 99,
+      await controller.create(movie);
+
+      await expect(controller.update(1, updateMovieDto)).resolves.toEqual({
+        id: 1,
         ...updateMovieDto,
       });
     });
@@ -112,6 +96,7 @@ describe('MoviesController', () => {
 
   describe('removeMovie', () => {
     it('should be able to delete movie', async () => {
+      await controller.create(movie);
       await expect(controller.remove(1)).toBeTruthy();
     });
   });

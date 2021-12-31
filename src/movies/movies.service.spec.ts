@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CreateMovieDto } from './dto/create-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MoviesService } from './movies.service';
+import { MovieInMemoryRepository } from './repositories/movie.repository.in-memory';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -17,25 +17,14 @@ describe('MoviesService', () => {
   movie.imageUrl = 'test image url';
 
   beforeEach(async () => {
+    const movieInMemoryRepository = new MovieInMemoryRepository();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MoviesService,
         {
           provide: getRepositoryToken(Movie),
-          useValue: {
-            create: jest.fn((createMovieDto: CreateMovieDto) => {
-              const newMovie: Movie = new Movie();
-              Object.assign(newMovie, { id: 1, ...createMovieDto });
-              return Promise.resolve(newMovie);
-            }),
-            save: jest.fn((movie: Movie) => Promise.resolve(movie)),
-            find: jest.fn(() => Promise.resolve([movie])),
-            findOne: jest.fn((id: number) => {
-              movie.id = id;
-              return movie;
-            }),
-            delete: jest.fn(() => Promise.resolve(true)),
-          },
+          useValue: movieInMemoryRepository,
         },
       ],
     }).compile();
@@ -67,6 +56,7 @@ describe('MoviesService', () => {
 
   describe('findAllMovies', () => {
     it('should be able to list all movies', async () => {
+      await service.create(movie);
       const movies = await service.findAll();
 
       expect(movies).toEqual([movie]);
@@ -75,7 +65,8 @@ describe('MoviesService', () => {
 
   describe('findOneMovie', () => {
     it('should be able to list one movie', async () => {
-      const requestedMovie = await service.findOne(3);
+      await service.create(movie);
+      const requestedMovie = await service.findOne(1);
 
       expect(requestedMovie).toEqual(movie);
     });
@@ -92,8 +83,10 @@ describe('MoviesService', () => {
         imageUrl: 'test image url',
       };
 
-      await expect(service.update(99, updateMovieDto)).resolves.toEqual({
-        id: 99,
+      await service.create(updateMovieDto);
+
+      await expect(service.update(1, updateMovieDto)).resolves.toEqual({
+        id: 1,
         ...updateMovieDto,
       });
     });
@@ -101,6 +94,7 @@ describe('MoviesService', () => {
 
   describe('removeMovie', () => {
     it('should be able to delete movie', async () => {
+      await service.create(movie);
       await expect(service.remove(1)).toBeTruthy();
     });
   });

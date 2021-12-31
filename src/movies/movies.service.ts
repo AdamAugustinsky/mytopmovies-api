@@ -46,9 +46,10 @@ export class MoviesService {
         HttpStatus.NOT_FOUND,
       );
 
-    Object.assign(movie, updateMovieDto);
-
-    const updatedMovie = await this.moviesRepository.save(movie);
+    const updatedMovie = await this.moviesRepository.merge(
+      movie,
+      updateMovieDto,
+    );
 
     return updatedMovie;
   }
