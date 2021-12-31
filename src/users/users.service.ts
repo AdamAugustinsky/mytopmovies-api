@@ -38,7 +38,7 @@ export class UsersService {
   }
 
   findAll(): Promise<User[]> {
-    return null;
+    return this.userRepository.find();
   }
 
   findOne(id: number): Promise<User> {
