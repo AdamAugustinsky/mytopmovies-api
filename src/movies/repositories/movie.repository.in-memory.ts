@@ -30,9 +30,9 @@ export class MovieInMemoryRepository {
   }
 
   findByIds(ids: number[]): Promise<Movie[]> {
-    return Promise.resolve(
-      this.movies.filter((movie: Movie) => movie.id in ids),
-    );
+    const moviesFound: Movie[] = [];
+    ids.forEach(async (id) => moviesFound.push(await this.findOne(id)));
+    return Promise.resolve(moviesFound);
   }
 
   merge(persistedMovie: Movie, updateMovieDto: UpdateMovieDto): Promise<Movie> {
