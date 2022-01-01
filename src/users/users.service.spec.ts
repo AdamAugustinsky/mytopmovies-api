@@ -86,7 +86,7 @@ describe('UsersService', () => {
   });
 
   describe('findUser', () => {
-    it('should be able to list one users', async () => {
+    it('should be able to list one user', async () => {
       await service.create(createUserDto);
 
       await expect(service.findOne(1)).resolves.toEqual({
@@ -94,6 +94,10 @@ describe('UsersService', () => {
         ...createUserDto,
         movies: [{ id: 1, ...movie }],
       });
+    });
+
+    it('should not be able to list non existent user  ', async () => {
+      await expect(service.findOne(-1)).rejects.toBeInstanceOf(HttpException);
     });
   });
 });
