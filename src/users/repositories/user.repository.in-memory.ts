@@ -1,4 +1,5 @@
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entities/user.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,5 +37,15 @@ export class UserInMemoryRepository {
 
   find(): Promise<User[]> {
     return Promise.resolve(this.users);
+  }
+
+  merge(persistedUser: User, updateUserDto: UpdateUserDto): Promise<User> {
+    const index = this.users.findIndex((user) => user.id == persistedUser.id);
+
+    Object.assign(persistedUser, updateUserDto);
+
+    this.users[index] = persistedUser;
+
+    return Promise.resolve(persistedUser);
   }
 }

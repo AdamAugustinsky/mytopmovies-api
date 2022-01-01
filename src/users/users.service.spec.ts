@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Movie } from '../movies/entities/movie.entity';
 import { MovieInMemoryRepository } from '../movies/repositories/movie.repository.in-memory';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserInMemoryRepository } from './repositories/user.repository.in-memory';
 import { UsersService } from './users.service';
@@ -98,6 +99,30 @@ describe('UsersService', () => {
 
     it('should not be able to list non existent user  ', async () => {
       await expect(service.findOne(-1)).rejects.toBeInstanceOf(HttpException);
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should be able to update user', async () => {
+      const updateUserDto = {
+        email: 'outroteste@email.com',
+        username: 'teste',
+        password: 'verysafepassword',
+        movies_ids: [1],
+      };
+      await service.create(createUserDto);
+
+      await expect(service.update(1, updateUserDto)).resolves.toEqual({
+        id: 1,
+        ...updateUserDto,
+        movies: [{ id: 1, ...movie }],
+      });
+    });
+
+    it('should not be able to update non existent user  ', async () => {
+      await expect(
+        service.update(-1, new UpdateUserDto()),
+      ).rejects.toBeInstanceOf(HttpException);
     });
   });
 });

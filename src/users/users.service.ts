@@ -1,12 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Movie } from '../movies/entities/movie.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { Movie } from '../movies/entities/movie.entity';
-
-@Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
@@ -53,8 +51,12 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    return null;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findOne(id);
+
+    const updatedUser = await this.userRepository.merge(user, updateUserDto);
+
+    return updatedUser;
   }
 
   remove(id: number): Promise<void> {

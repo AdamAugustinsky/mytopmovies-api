@@ -55,6 +55,16 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({
+    status: 404,
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User with id _ not found',
+      },
+    },
+  })
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
