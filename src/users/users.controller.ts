@@ -34,11 +34,22 @@ export class UsersController {
   }
 
   @Get()
+  @ApiResponse({ status: 200, type: User, isArray: true })
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({
+    status: 404,
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User with id _ not found',
+      },
+    },
+  })
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(+id);
   }

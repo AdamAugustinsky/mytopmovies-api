@@ -86,4 +86,16 @@ describe('UsersController', () => {
       ]);
     });
   });
+
+  describe('findUser', () => {
+    it('should be able to list one users', async () => {
+      await controller.create(createUserDto);
+
+      await expect(controller.findOne('1')).resolves.toEqual({
+        id: 1,
+        ...createUserDto,
+        movies: [{ id: 1, ...movie }],
+      });
+    });
+  });
 });

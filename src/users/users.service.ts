@@ -37,12 +37,20 @@ export class UsersService {
     return createdUser;
   }
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
-  findOne(id: number): Promise<User> {
-    return null;
+  async findOne(id: number): Promise<User> {
+    const user: User = await this.userRepository.findOne(id);
+
+    if (!user)
+      throw new HttpException(
+        `User with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

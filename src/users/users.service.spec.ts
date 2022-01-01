@@ -84,4 +84,16 @@ describe('UsersService', () => {
       ]);
     });
   });
+
+  describe('findUser', () => {
+    it('should be able to list one users', async () => {
+      await service.create(createUserDto);
+
+      await expect(service.findOne(1)).resolves.toEqual({
+        id: 1,
+        ...createUserDto,
+        movies: [{ id: 1, ...movie }],
+      });
+    });
+  });
 });
