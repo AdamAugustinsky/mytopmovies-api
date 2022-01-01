@@ -50,7 +50,7 @@ export class MovieInMemoryRepository {
   delete(id: number): Promise<boolean> {
     const index: number = this.movies.findIndex((movie) => movie.id == id);
 
-    if (this.movies.splice(index)) Promise.resolve(true);
-    return Promise.resolve(false);
+    this.movies.splice(index);
+    return Promise.resolve(true);
   }
 }
