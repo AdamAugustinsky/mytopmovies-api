@@ -59,7 +59,8 @@ export class UsersService {
     return updatedUser;
   }
 
-  remove(id: number): Promise<void> {
-    return null;
+  async remove(id: number): Promise<void> {
+    await this.findOne(id);
+    await this.userRepository.delete(id);
   }
 }

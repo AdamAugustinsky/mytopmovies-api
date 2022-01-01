@@ -123,4 +123,18 @@ describe('UsersController', () => {
       ).rejects.toBeInstanceOf(HttpException);
     });
   });
+
+  describe('deleteUser', () => {
+    it('should be able to delete user', async () => {
+      await controller.create(createUserDto);
+
+      await expect(controller.remove('1')).toBeTruthy();
+    });
+
+    it('should not be able to update non existent user  ', async () => {
+      await expect(controller.remove('-1')).rejects.toBeInstanceOf(
+        HttpException,
+      );
+    });
+  });
 });

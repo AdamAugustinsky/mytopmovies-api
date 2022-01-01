@@ -73,6 +73,16 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiResponse({ status: 200 })
+  @ApiResponse({
+    status: 404,
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User with id _ not found',
+      },
+    },
+  })
   remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(+id);
   }

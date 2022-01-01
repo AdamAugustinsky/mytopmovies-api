@@ -48,4 +48,12 @@ export class UserInMemoryRepository {
 
     return Promise.resolve(persistedUser);
   }
+
+  delete(id: number): Promise<boolean> {
+    const index = this.users.findIndex((user) => user.id == id);
+
+    this.users.splice(index);
+
+    return Promise.resolve(true);
+  }
 }
