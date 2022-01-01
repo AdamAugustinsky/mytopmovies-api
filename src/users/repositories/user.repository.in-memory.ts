@@ -2,7 +2,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/user.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FilterOptions = any;
+type FilterOptions = { email: string };
 
 export class UserInMemoryRepository {
   private users: User[] = [];
@@ -23,8 +23,8 @@ export class UserInMemoryRepository {
     return Promise.resolve(user);
   }
 
-  findOne(filter: FilterOptions): Promise<User> {
-    if (filter instanceof Number)
+  findOne(filter?: number | FilterOptions): Promise<User> {
+    if (typeof filter == 'number')
       return Promise.resolve(
         this.users.find((user: User) => user.id == filter),
       );
