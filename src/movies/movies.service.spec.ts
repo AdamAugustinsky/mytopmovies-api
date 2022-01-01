@@ -1,5 +1,7 @@
+import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MoviesService } from './movies.service';
 import { MovieInMemoryRepository } from './repositories/movie.repository.in-memory';
@@ -70,6 +72,10 @@ describe('MoviesService', () => {
 
       expect(requestedMovie).toEqual(movie);
     });
+
+    it('should not be able to list non existent movie', async () => {
+      expect(service.findOne(-1)).rejects.toBeInstanceOf(HttpException);
+    });
   });
 
   describe('updateMovie', () => {
@@ -90,12 +96,22 @@ describe('MoviesService', () => {
         ...updateMovieDto,
       });
     });
+
+    it('should not be able to update non existent movie', async () => {
+      expect(service.update(-1, new UpdateMovieDto())).rejects.toBeInstanceOf(
+        HttpException,
+      );
+    });
   });
 
   describe('removeMovie', () => {
     it('should be able to delete movie', async () => {
       await service.create(movie);
       await expect(service.remove(1)).toBeTruthy();
+    });
+
+    it('should not be able to remove non existent movie', async () => {
+      expect(service.remove(-1)).rejects.toBeInstanceOf(HttpException);
     });
   });
 });
