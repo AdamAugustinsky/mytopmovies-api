@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -24,6 +25,7 @@ export class User {
 
   @Column()
   @ApiProperty()
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @ManyToMany(() => Movie)
