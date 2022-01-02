@@ -5,6 +5,8 @@ import { Movie } from '../movies/entities/movie.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
+
 export class UsersService {
   constructor(
     @InjectRepository(User)
@@ -26,6 +28,11 @@ export class UsersService {
     Object.assign(createdUser, createUserDto);
     createdUser.movies = await this.moviesRepository.findByIds(
       createUserDto.movies_ids,
+    );
+
+    createdUser.password = await bcrypt.hash(
+      createUserDto.password,
+      await bcrypt.genSalt(),
     );
 
     createdUser = await this.userRepository.create(createdUser);
@@ -55,6 +62,11 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
+
+    updateUserDto.password = await bcrypt.hash(
+      updateUserDto.password,
+      await bcrypt.genSalt(),
+    );
 
     const updatedUser = await this.userRepository.merge(user, updateUserDto);
 

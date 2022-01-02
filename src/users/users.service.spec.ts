@@ -7,6 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserInMemoryRepository } from './repositories/user.repository.in-memory';
 import { UsersService } from './users.service';
+import * as bcrypt from 'bcrypt';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -18,6 +19,8 @@ describe('UsersService', () => {
     movies_ids: [1],
   };
 
+  const encryptedPassord = 'encrypted verysafepassword';
+
   const movie: Movie = new Movie();
   movie.title = 'test title';
   movie.description = 'test description';
@@ -27,6 +30,8 @@ describe('UsersService', () => {
   movie.imageUrl = 'test image url';
 
   beforeEach(async () => {
+    (bcrypt.hash as jest.Mock) = jest.fn().mockReturnValue(encryptedPassord);
+
     const userInMemoryRepository = new UserInMemoryRepository();
 
     const movieInMemoryRepository = new MovieInMemoryRepository();
@@ -59,6 +64,7 @@ describe('UsersService', () => {
       await expect(service.create(createUserDto)).resolves.toEqual({
         id: 1,
         ...createUserDto,
+        password: encryptedPassord,
         movies: [{ id: 1, ...movie }],
       });
     });
@@ -80,6 +86,7 @@ describe('UsersService', () => {
         {
           id: 1,
           ...createUserDto,
+          password: encryptedPassord,
           movies: [{ id: 1, ...movie }],
         },
       ]);
@@ -93,6 +100,7 @@ describe('UsersService', () => {
       await expect(service.findOne(1)).resolves.toEqual({
         id: 1,
         ...createUserDto,
+        password: encryptedPassord,
         movies: [{ id: 1, ...movie }],
       });
     });
@@ -115,6 +123,7 @@ describe('UsersService', () => {
       await expect(service.update(1, updateUserDto)).resolves.toEqual({
         id: 1,
         ...updateUserDto,
+        password: encryptedPassord,
         movies: [{ id: 1, ...movie }],
       });
     });

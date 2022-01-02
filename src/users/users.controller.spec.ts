@@ -8,6 +8,7 @@ import { User } from './entities/user.entity';
 import { UserInMemoryRepository } from './repositories/user.repository.in-memory';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import * as bcrypt from 'bcrypt';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -19,6 +20,8 @@ describe('UsersController', () => {
     movies_ids: [1],
   };
 
+  const encryptedPassord = 'encrypted verysafepassword';
+
   const movie: Movie = new Movie();
   movie.title = 'test title';
   movie.description = 'test description';
@@ -28,6 +31,8 @@ describe('UsersController', () => {
   movie.imageUrl = 'test image url';
 
   beforeEach(async () => {
+    (bcrypt.hash as jest.Mock) = jest.fn().mockReturnValue(encryptedPassord);
+
     const userInMemoryRepository = new UserInMemoryRepository();
 
     const movieInMemoryRepository = new MovieInMemoryRepository();
@@ -61,6 +66,7 @@ describe('UsersController', () => {
       await expect(controller.create(createUserDto)).resolves.toEqual({
         id: 1,
         ...createUserDto,
+        password: encryptedPassord,
         movies: [{ id: 1, ...movie }],
       });
     });
@@ -82,6 +88,7 @@ describe('UsersController', () => {
         {
           id: 1,
           ...createUserDto,
+          password: encryptedPassord,
           movies: [{ id: 1, ...movie }],
         },
       ]);
@@ -95,6 +102,7 @@ describe('UsersController', () => {
       await expect(controller.findOne('1')).resolves.toEqual({
         id: 1,
         ...createUserDto,
+        password: encryptedPassord,
         movies: [{ id: 1, ...movie }],
       });
     });
@@ -113,6 +121,7 @@ describe('UsersController', () => {
       await expect(controller.update('1', updateUserDto)).resolves.toEqual({
         id: 1,
         ...updateUserDto,
+        password: encryptedPassord,
         movies: [{ id: 1, ...movie }],
       });
     });
