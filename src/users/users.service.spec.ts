@@ -59,7 +59,7 @@ describe('UsersService', () => {
       await expect(service.create(createUserDto)).resolves.toEqual({
         id: 1,
         ...createUserDto,
-        movies: [{ id: 1 }],
+        movies: [{ id: 1, ...movie }],
       });
     });
 
@@ -80,7 +80,7 @@ describe('UsersService', () => {
         {
           id: 1,
           ...createUserDto,
-          movies: [{ id: 1 }],
+          movies: [{ id: 1, ...movie }],
         },
       ]);
     });
@@ -93,7 +93,7 @@ describe('UsersService', () => {
       await expect(service.findOne(1)).resolves.toEqual({
         id: 1,
         ...createUserDto,
-        movies: [{ id: 1 }],
+        movies: [{ id: 1, ...movie }],
       });
     });
 
@@ -115,7 +115,7 @@ describe('UsersService', () => {
       await expect(service.update(1, updateUserDto)).resolves.toEqual({
         id: 1,
         ...updateUserDto,
-        movies: [{ id: 1 }],
+        movies: [{ id: 1, ...movie }],
       });
     });
 
@@ -133,7 +133,7 @@ describe('UsersService', () => {
       await expect(service.remove(1)).toBeTruthy();
     });
 
-    it('should not be able to delete non existent user  ', async () => {
+    it('should not be able to update non existent user  ', async () => {
       await expect(service.remove(-1)).rejects.toBeInstanceOf(HttpException);
     });
   });

@@ -21,30 +21,26 @@ export class UsersService {
     if (isEmailAlreadyInUse)
       throw new HttpException('Email already in use', HttpStatus.CONFLICT);
 
-    let user: User = new User();
+    let createdUser: User = new User();
 
-    Object.assign(user, createUserDto);
-    user.movies = createUserDto.movies_ids.map((movie_id) => {
-      const movie = new Movie();
+    Object.assign(createdUser, createUserDto);
+    createdUser.movies = await this.moviesRepository.findByIds(
+      createUserDto.movies_ids,
+    );
 
-      movie.id = movie_id;
+    createdUser = await this.userRepository.create(createdUser);
 
-      return movie;
-    });
+    this.userRepository.save(createdUser);
 
-    user = await this.userRepository.create(user);
-
-    return this.userRepository.save(user);
+    return createdUser;
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find({ relations: ['movies'] });
+    return await this.userRepository.find();
   }
 
   async findOne(id: number): Promise<User> {
-    const user: User = await this.userRepository.findOne(id, {
-      relations: ['movies'],
-    });
+    const user: User = await this.userRepository.findOne(id);
 
     if (!user)
       throw new HttpException(
