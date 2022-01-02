@@ -61,7 +61,7 @@ describe('UsersController', () => {
       await expect(controller.create(createUserDto)).resolves.toEqual({
         id: 1,
         ...createUserDto,
-        movies: [{ id: 1, ...movie }],
+        movies: [{ id: 1 }],
       });
     });
 
@@ -82,7 +82,7 @@ describe('UsersController', () => {
         {
           id: 1,
           ...createUserDto,
-          movies: [{ id: 1, ...movie }],
+          movies: [{ id: 1 }],
         },
       ]);
     });
@@ -95,7 +95,7 @@ describe('UsersController', () => {
       await expect(controller.findOne('1')).resolves.toEqual({
         id: 1,
         ...createUserDto,
-        movies: [{ id: 1, ...movie }],
+        movies: [{ id: 1 }],
       });
     });
   });
@@ -113,7 +113,7 @@ describe('UsersController', () => {
       await expect(controller.update('1', updateUserDto)).resolves.toEqual({
         id: 1,
         ...updateUserDto,
-        movies: [{ id: 1, ...movie }],
+        movies: [{ id: 1 }],
       });
     });
 
