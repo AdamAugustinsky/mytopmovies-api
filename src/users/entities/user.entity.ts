@@ -29,7 +29,15 @@ export class User {
   password: string;
 
   @ManyToMany(() => Movie)
-  @JoinTable()
+  @JoinTable({
+    name: 'users_movies',
+    joinColumn: {
+      name: 'user_id',
+    },
+    inverseJoinColumn: {
+      name: 'movie_id',
+    },
+  })
   @ApiProperty({ type: Movie, isArray: true })
   movies: Movie[];
 }

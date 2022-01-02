@@ -36,11 +36,13 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ relations: ['movies'] });
   }
 
   async findOne(id: number): Promise<User> {
-    const user: User = await this.userRepository.findOne(id);
+    const user: User = await this.userRepository.findOne(id, {
+      relations: ['movies'],
+    });
 
     if (!user)
       throw new HttpException(
